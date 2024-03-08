@@ -34,6 +34,58 @@
 Для реализации основного меню можно использовать пример ниже или написать свой
 """
 
+moneyAmount = 0.
+history = []
+hKey = 'expenseItem'
+hValue = 'price'
+
+def ChangeBalance(value):
+    global moneyAmount
+    moneyAmount += value
+    print(f"Сумма на счету: {moneyAmount : .02f}")
+
+def CheckBalance(requaredAmount):
+    global moneyAmount
+    if requaredAmount <= moneyAmount:
+        return True
+    else:
+        return False
+
+def AddHistory(purpose, amount):
+    global hKey, hValue
+    historyItem = { hKey : purpose, hValue : amount}
+    history.append(historyItem)
+
+def PrintHistoryItem(item):
+    global  hKey, hValue
+    print(f"Purpose {item[hKey]} --> {item[hValue]}")
+
+def DepositMenu():
+    global moneyAmount
+    value = float(input("Сколько хотите внести?: "))
+    if value > 0:
+        ChangeBalance(value)
+    else:
+        print("Ошибка, сумма должна быть положительным числом!")
+
+def PurchaseMenu():
+    value = float(input("Введите стоимость покупки?: "))
+    if CheckBalance(value):
+        key = input("Ведите статью расхода: ")
+        ChangeBalance(-value)
+        AddHistory(key, -value)
+    else:
+        print('Недостаточно средств')
+
+def HistoryMenu():
+    global history
+    print("История покупок:")
+    for item in history:
+        PrintHistoryItem(item)
+
+
+
+
 while True:
     print('1. пополнение счета')
     print('2. покупка')
@@ -42,12 +94,13 @@ while True:
 
     choice = input('Выберите пункт меню')
     if choice == '1':
-        pass
+        DepositMenu()
     elif choice == '2':
-        pass
+        PurchaseMenu()
     elif choice == '3':
-        pass
+        HistoryMenu()
     elif choice == '4':
         break
     else:
         print('Неверный пункт меню')
+print("До встречи, будем вас ждать!")
